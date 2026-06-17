@@ -1,0 +1,27 @@
+---
+title: "Biodiverse Manual"
+format: html
+editor: visual
+---
+
+## Biodiverse Manual
+
+**Version 1.0**
+
+[**A tool for the spatial analysis of biological and related diversity**](https://shawnlaffan.github.io/biodiverse/)
+
+**Shawn W Laffan, Sophia German**
+
+**June 2026**
+
+This document is a comprehensive guide for Biodiverse.
+
+The Biodiverse Quick Start Guide is available at <https://biogeospatial.github.io/biodiverse-quick-start/>
+
+There is also a blog that provides updates and tips about functionality. It can be accessed through <http://biodiverse-analysis-software.blogspot.com.au/>
+
+If you have question about the software then please start a discussion at <https://github.com/shawnlaffan/biodiverse/discussions> or post a question at <https://groups.google.com/forum/#!forum/biodiverse-users>
+
+This work is licensed under a [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License](https://creativecommons.org/licenses/by-nc-nd/3.0/).
+
+![](images/clipboard-518310174.png){width="88"}
