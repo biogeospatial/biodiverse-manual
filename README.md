@@ -1,2 +1,2 @@
 # biodiverse-manual
-Documentatin for Biodiverse
+Documentation for Biodiverse
