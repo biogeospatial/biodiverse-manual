@@ -1,0 +1,35 @@
+project:
+  type: book
+  output-dir: docs
+
+# https://quarto.org/docs/reference/projects/books.html
+
+book:
+  title: "Biodiverse Manual"
+  #  need to add quick start guide authors if we use material from there.  
+  author: "Shawn W Laffan, Sophia German"
+  date: "2026-06-17"
+  chapters:
+    - index.qmd
+  output-file: "Biodiverse-Manual"
+  downloads: [pdf]
+
+format:
+  html:
+    theme: zephyr
+    toc: true
+    toc-depth: 3
+    toc-expand: true
+    #toc-location: left
+    number-sections: false
+    #number-depth: 2
+    link-external-newwindow: true
+  pdf:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    number-depth: 2
+
+# bibliography: references.bib
+editor: source
+
