@@ -1,31 +1,33 @@
+---
+
+editor: 
+  markdown: 
+    wrap: 72
+---
+
 These instructions apply to version 2.99_001 and later.
 
-These instructions assume you are not installing the GUI components.  It is possible to run the GUI on HPC, and details can be added if needed.
+These instructions assume you are not installing the GUI components. It is possible to run the GUI on HPC, and details can be added if needed.
 
-They are based on development on Centos 6.3, but have not been tested line by line when written.  Please report any errors or suggestions.  
+They are based on development on Centos 6.3, but have not been tested line by line when written. Please report any errors or suggestions.
 
 They also assume you are using a standard user account, and are accessing Biodiverse through the git repository.
 
+**Table of contents:** \* [Installation](#installation) \* [Part 1. Install a non-system perl](#part-1-install-a-non-system-perl) \* [Part 2. Clone the Biodiverse repo](#part-2-clone-the-biodiverse-repo) \* [Part 3. Install the perl dependencies](#part-3-install-the-perl-dependencies)
 
-**Table of contents:**
-* [Installation](#installation)
-  * [Part 1.  Install a non-system perl](#part-1-install-a-non-system-perl)
-  * [Part 2.  Clone the Biodiverse repo](#part-2-clone-the-biodiverse-repo)
-  * [Part 3.  Install the perl dependencies](#part-3-install-the-perl-dependencies)
+# Installation {#installation}
 
+## Part 1. Install a non-system perl
 
-# Installation #
+- Install PerlBrew, including its optional cpanm client.
+  - Instructions are at https://perlbrew.pl/
+  - **You should not use the system perl**. The operating system assumes specific versions of files are in the system perl.\
+  - Perlbrew is recommended, and is used for Biodiverse development, and is assumed below. There are other other systems like plenv which will likely also work, but I have not tested them.
+  - Make sure you are using the non-system perl for all subsequent steps. This could involve adding a line to your .bashrc (or equivalent) file to ensure it is loaded each time you login. Perlbrew provides instructions on how to do this.
 
-## Part 1.  Install a non-system perl ##
+## Part 2. Clone the Biodiverse repo
 
-  * Install PerlBrew, including its optional cpanm client.  
-    * Instructions are at https://perlbrew.pl/
-    * **You should not use the system perl**.  The operating system assumes specific versions of files are in the system perl.  
-    * Perlbrew is recommended, and is used for Biodiverse development, and is assumed below.  There are other other systems like plenv which will likely also work, but I have not tested them.
-    * Make sure you are using the non-system perl for all subsequent steps.  This could involve adding a line to your .bashrc (or equivalent) file to ensure it is loaded each time you login.  Perlbrew provides instructions on how to do this.  
-  
-## Part 2.  Clone the Biodiverse repo
-```bash
+``` bash
   #  update this if you wish to install to a different location or checkout a release tag
   git clone https://github.com/shawnlaffan/biodiverse.git
 
@@ -33,9 +35,9 @@ They also assume you are using a standard user account, and are accessing Biodiv
   cd biodiverse 
 ```
 
+## Part 3. Install the perl dependencies
 
-## Part 3.  Install the perl dependencies ##
-```bash
+``` bash
 
   ##  if you are using perlbrew and forgot to install the cpanm client:
   perlbrew install-cpanm
@@ -76,34 +78,29 @@ They also assume you are using a standard user account, and are accessing Biodiv
   #   system package manager to install libffi
   #   and then re-run the above command
 
-
 ```
 
-# Testing it #
+# Testing it
 
-Follow these steps to check that everything is installed and Biodiverse will run.  
+Follow these steps to check that everything is installed and Biodiverse will run.
 
-```bash
+``` bash
   #  Make sure you are in the top level of the biodiverse distribution
   #  You should see directories bin, etc, lib, t, xt and so forth when you run ls.  
   export BD_NO_TEST_GUI=1  #  no need to test the GUI libs load
   prove -l
-
 ```
 
+# Running it
 
-# Running it #
+- Run your scripts as you would any other perl script, e.g.
 
-  * Run your scripts as you would any other perl script, e.g.
-```bash
+``` bash
 perl ~/biodiverse/bin/run_randomisation.pl
 ```
 
+# Troubleshooting
 
-
-# Troubleshooting #
-  * If you are keeping up with the git development then you will occassionally need to install extra dependencies.  
-    If perl complains that you are missing a module then it can be installed using cpanm.  For example if the missing 
-    module is called Blort::Bork, then you can run ```cpanm Blort::Bork``` 
-    at the command line to install it and its dependencies.  
-  * Please report any issues using the [project issue tracker](https://github.com/shawnlaffan/biodiverse/issues/)
+- If you are keeping up with the git development then you will occassionally need to install extra dependencies.\
+  If perl complains that you are missing a module then it can be installed using cpanm. For example if the missing module is called Blort::Bork, then you can run `cpanm Blort::Bork` at the command line to install it and its dependencies.\
+- Please report any issues using the [project issue tracker](https://github.com/shawnlaffan/biodiverse/issues/)

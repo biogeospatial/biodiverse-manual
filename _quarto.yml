@@ -11,7 +11,10 @@ book:
   date: "2026-06-17"
   chapters:
     - index.qmd
+    - ProjectHome.qmd
+    - Installation.qmd
     - KeyConcepts.qmd
+    - ImportBasedata.qmd 
     - DataStructures.qmd
     - AnalysisTypes.qmd
     - FAQ.qmd
