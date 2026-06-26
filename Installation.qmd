@@ -1,14 +1,314 @@
-Installation instructions are below.  Which to use depends on which version you have downloaded (see links in the [downloads page](https://github.com/shawnlaffan/biodiverse/wiki/Downloads)).
+# 1. Installation instructions
 
-  * Windows
-    * Executable:  [InstallationWindowsBinary](InstallationWindowsBinary)
-    * Source code:  [InstallationWindowsSource](InstallationWindowsSource)
-  * Macintosh
-    * Binary:  [InstallationMacOSBinary](InstallationMacOSBinary)
-    * Source code:  [InstallationMacOSSource](InstallationMacOSSource)
-  * Linux
-    * Binary:  [InstallationLinuxBinary](InstallationLinuxBinary)
-    * Source code:  [InstallationLinuxSource](InstallationLinuxSource)
-    * Source code on HPC systems:  [InstallationLinuxSourceHPC](InstallationLinuxSourceHPC)
-  * [Back to main table of contents](Home)
-  
+Installation instructions are below. Which to use depends on which version you have downloaded (see links in the [downloads page](https://github.com/shawnlaffan/biodiverse/wiki/Downloads)).
+
+## Windows
+
+### Executable
+
+**These instructions apply to version 2.0 and later.**
+
+#### Installation
+
+- These instructions assume you have [downloaded](https://purl.org/biodiverse/wiki/downloads) and extracted the Biodiverse zip file to your hard drive.
+- The following assumes you have unzipped it to `C:\biodiverse`. If you use a different path then modify the commands below as appropriate.
+
+#### Running it
+
+- Biodiverse can be run by double clicking on `C:\biodiverse\BiodiverseGUI.exe`.
+  - Do not use the `BiodiverseGUI.bat` file. It is used for the source code version.
+- If you want to keep the command log visible after you close Biodiverse then run it from a command prompt.
+  - Under `Start Menu -> Run` type `cmd`.
+  - In the resulting command window, type `C:\biodiverse\BiodiverseGUI.exe`.
+
+#### Troubleshooting and changes
+
+- Slow first startup
+  - The Windows executable is generated using the [pp tool](https://metacpan.org/pod/pp). The files are unpacked to the temp folder at first use, so starting the first time takes a minute or two.
+  - Tools that clean the temp folder will erase the extracted files, in which case they will need to be re-extracted.
+- Please report any other issues using the [project issue tracker](https://github.com/shawnlaffan/biodiverse/issues/)
+
+### Source code
+
+**These instructions apply to version 2.99_001 and later.**
+
+These assume you have saved the Biodiverse source code to C:\biodiverse. If you have not then change the `C:\biodiverse\lib` path in the following to the appropriate path.
+
+*IMPORTANT*: You need to be sure to run step 4 from the installation every time you want to run the system. (This is until we develop a batch script to handle it).
+
+*DO NOT USE A PATH WITH SPACES IN IT*. This causes problems with the batch file used to run the source code version. (This has no effect on the executable file).
+
+#### Installation
+
+- Step 1. Install [Strawberry Perl 5.38 PDL edition](https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_5380_5361/strawberry-perl-5.38.0.1-64bit-PDL.zip). The rest of these instructions assume you have extracted it to C:\strawberry. If you have not then edit the paths below to match what you have used.
+
+- Step 2. [Download](Downloads) the source code version to obtain a stable release. Alternately you can use a git client to get the latest Biodiverse code, see https://github.com/shawnlaffan/biodiverse and the clone URL there.
+
+- Step 3. Open a command prompt. The rest of these instructions assume you are at the prompt.
+
+- Step 4. Run these commands, editing the folder paths as needed to match your system.
+
+``` cmd
+  set BDV_PATH=c:\biodiverse   set STRAWPATH=c:\strawberry   :: This next command should only be needed if the strawberry perl bin folders    :: are not in your path already, or if Rtools (or some other c-compiler toolset)    :: comes before the strawberry perl bin folders in the path.   set PATH=%STRAWPATH%\bin;%STRAWPATH%\perl\site\bin;%STRAWPATH%\perl\vendor\bin;%STRAWPATH%\perl\bin;%PATH%
+```
+
+- Step 5. Now we need to install some files using the ppm and cpanm utilities. In the same command prompt that you ran the commands from step 1, run the ppm install command for all ppd files. You can copy and paste these into the command prompt. It is best to do them one block at a time as the comments list some conditional steps.
+
+``` cmd
+  :: Install the precompiled binaries needed for the GUI.   cpanm https://github.com/shawnlaffan/perl-alien-gtkstack-windows.git   ppm set repository biodiverse https://github.com/shawnlaffan/perl-alien-gtkstack-windows/releases/download/first_upload/   ppm install Cairo   ppm install Cairo-GObject   ppm install Glib   ppm install Gnome2-Canvas   ppm install Gtk2   ppm install Pango      ::  This might no longer be necessary, but does not hurt.     ::  Math::Random::MT::Auto had test errors due to    ::  false positive test results caused by another module.   cpanm Math::Random::MT::Auto   :: If the tests report failures due    :: to a missing signal then force install it.   :: (But not for other failures).   cpanm --notest Math::Random::MT::Auto    :: Faster utils, don't worry if the installs fail (possible for Data::Recursive)   cpanm List::MoreUtils::XS   cpanm https://github.com/shawnlaffan/biodiverse-utils/releases/download/v1.09/Biodiverse-Utils-1.09.tar.gz   cpanm Data::Recursive    :: Now install the rest of the dependencies.     :: Ensure you are within the main Biodiverse directory    :: when running it, as it needs to find the file called `cpanfile`   :: Note that the GDAL installation can take a _loooong_ time (>40 minutes)   cpanm --installdeps .    :: The next line is only needed for v3.1 and earlier.   :: You might need to re-run it a few times as    :: anti-virus scanning can cause test failures due to    :: file locks not being released.   cpanm Task::Biodiverse 
+```
+
+#### Running it
+
+The above installation process **should** install all the relevant files, so we can now run it.
+
+- This is the same as step 1 in the installation instructions, but needs to be run every time you open a new command prompt (unless you add the paths to your PATH variable at the windows level). Remember to edit the folder paths if you installed Biodiverse and/or Strawberry Perl to different folders.
+
+``` cmd
+  set BDV_PATH=c:\biodiverse   set STRAWPATH=c:\strawberry   set PATH=%STRAWPATH%\bin;%STRAWPATH%\perl\site\bin;%STRAWPATH%\perl\vendor\bin;%STRAWPATH%\perl\bin;%BDV_PATH%\bin;%PATH%   ::  If you are using Biodiverse 4.99_001 or earlier then you need to add one module to the default set, otherwise this can be skipped.   set PERL5OPT=-MAlien::GtkStack::Windows 
+```
+
+- Now you can run it.
+
+``` cmd
+  perl %BDV_PATH%\bin\BiodiverseGUI.pl
+```
+
+- See the [trouble shooting](#trouble-shooting) section below if you encounter problems, for example modules failing to load.
+
+#### Trouble shooting {#trouble-shooting}
+
+- If Perl complains that it cannot locate a file when running Biodiverse then this library will need to be installed interactively using cpan. The complaint will contain text like `Can't locate Fred/Fred.pm in @INC (@INC contains:...)` In this case, install module Fred::Fred (substitute a double colon "::" for each forward slash "/", and remove the trailing ".pm" from the module it cannot locate). E.g.: `cpanm Fred::Fred` . This can happen if one or more of the modules listed in the Task distributions failed to install.
+
+- Please report any other issues using the [project issue tracker](https://github.com/shawnlaffan/biodiverse/issues/)
+
+## Macintosh
+
+### Binary
+
+To install the pre-build (binary) version for Biodiverse follow these instructions:
+
+1.  Download the latest Biodiverse installer [here](https://purl.org/biodiverse/wiki/Downloads).
+
+2.  Unzip the file contents.
+
+3.  Double-click on the extracted Biodiverse .dmg file from your Downloads folder.
+
+    ![](images/clipboard-4186901876.jpeg)
+
+4.  From the installer window, drag and drop the Biodiverse icon onto the Application folder.
+
+    ![](images/clipboard-3065858359.jpeg)
+
+5.  Eject the Biodiverse .dmg file.
+
+6.  To open Biodiverse, double-click Biodiverse in your Application folder. (You might also need to go into the security settings to enable it to run as an unsigned app).
+
+To keep Biodiverse attached to your Dock:
+
+- If you have already opened Biodiverse, control-click on the Biodiverse icon in the Dock. Then select "Options" and then "Keep in Dock".
+
+  ![](images/clipboard-3997644112.jpeg)
+
+- If you have not launched Biodiverse, drag the Biodiverse icon from the Application folder to a suitable location on the Dock.
+
+Once you have downloaded and installed Biodiverse remember to read the [Quick Start Guide](https://biogeospatial.github.io/biodiverse-quick-start/).
+
+If you need to install Biodiverse for source follow the below instructions.
+
+### Source code
+
+To install Biodiverse from source for macOS four broad steps are required. First, if you haven't already, you will have to install Xcode command line tools. Second, a software management system has to be installed which can be used to install software required by Biodiverse. Third, Biodiverse requires a higher version of perl than that installed by default on macOS. This and Biodiverse's perl modules dependancies will be install. Fourth, Biodiverse will be installed.
+
+If you find issues with these instructions then please raise an [issue](https://github.com/shawnlaffan/biodiverse/issues/) or start a [discussion thread](https://github.com/shawnlaffan/biodiverse/discussions).
+
+#### Install Xcode command line tools
+
+To install Xcode command line tools (and all following software) you will be using the Terminal application. To open Terminal:
+
+1.  Double-click the Terminal application in the Applications:Utilities folder. Or do a Spotlight search for "Terminal" and open it.
+
+2.  Copy and paste the below text at the terminal prompt and then hit return.
+
+    ``` sh
+     xcode-select --install
+    ```
+
+3.  Once this is install you will need to agree the Apple's software licence.
+
+    ``` sh
+    sudo xcodebuild -license
+    ```
+
+    Enter your password when prompted.
+
+#### Installing Homebrew and required software.
+
+1.  Homebrew is a package management system which simplifies the installation of software on Apple's macOS operating system. It is used to install software required by Biodiverse.
+
+    ``` sh
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+
+2.  Install other required packages:
+
+    ``` sh
+    brew install gdk-pixbuf pango gtk+ gtk+3 libglade libffi gdal openssl brew install hicolor-icon-theme brew install adwaita-icon-theme
+    ```
+
+Further information about Homebrew can be found [here](https://brew.sh).
+
+#### Installing perlbrew and required perl modules
+
+perlbrew is an admin-free perl installation management tool. It can be used to install a version of perl that Biodiverse requires. 1. Copy and paste this line into your terminal to install perlbrew: `sh    \curl -L https://install.perlbrew.pl | bash` 2. Install the version of perl that Biodiverse requires and then use it (must be at least 5.36): `sh    ~/perl5/perlbrew/bin/perlbrew install --noman perl-5.36.1    #  if there are "no symbol" test failures in libperl.t then skip the tests    #~/perl5/perlbrew/bin/perlbrew install --noman --notest perl-5.36.1    ~/perl5/perlbrew/bin/perlbrew switch perl-5.36.0` 3. Install cpanminus for installing other perl modules: `sh    perlbrew install-cpanm` 4. Install Biodiverse GUI module dependencies. Gtk2 has known test failures, but works, so we don't test it. `sh    cpanm --notest Gtk2    cpanm Pango IO::Socket::SSL Glib::Object::Introspection Scalar::Util::Numeric Browser::Start` 5. Install libgnomecanvas dynamic lib and perl module, including a patch to avoid a serious memory leak. These have not been widely tested so please report issues. `sh     cpanm XML::Parser      brew install libart intltool gettext     \curl -L https://download.gnome.org/sources/libgnomecanvas/2.30/libgnomecanvas-2.30.3.tar.bz2 > libgnomecanvas-2.30.3.tar.bz     tar xf libgnomecanvas-2.30.3.tar.bz     cd libgnomecanvas-2.30.3     \curl -L https://raw.githubusercontent.com/shawnlaffan/biodiverse/master/etc/libgnomecanvas.patch > libgnomecanvas.patch     patch -d libgnomecanvas < libgnomecanvas.patch     #  if you are willing to take the risk then you can install into --prefix=$HOMEBREW_PATH     ./configure --disable-dependency-tracking --disable-static --prefix=$HOME/usr --disable-glade     make     make install     export DYLD_LIBRARY_PATH=${HOME}/usr:${DYLD_LIBRARY_PATH}     export CPATH=${HOME}/usr:${CPATH}     cpanm --notest Gnome2::Canvas`
+
+#### Install Biodiverse
+
+1.  Install Biodiverse either from source or by cloning the git repository. If using git then to install at the top level of your home directory: \`\`\`sh cd \~ git clone --depth 1 https://github.com/shawnlaffan/biodiverse.git cd biodiverse cpanm --installdeps . \# only need to run these two lines for v3.1 or earlier cpanm Task::Biodiverse::NoGUI cpanm Task::Biodiverse
+
+    \# Some utility functions that make processing faster. These are not critical so ignore them if there are installation errors.\
+    \# The first one might need an update to cpanm for it to access the file. cpanm LWP::Protocol::https cpanm https://github.com/shawnlaffan/biodiverse-utils/releases/download/v1.11/Biodiverse-Utils-1.11.tar.gz cpanm Data::Recursive
+
+    \# make sure the file history can be saved mkdir -p \${HOME}/.local/share/ touch \$HOME/recently-used.xbel\
+    \`\`\`
+
+2.  To run biodiverse switch to the correct version of perl if you haven't already (this assumes perl-5.36.1), and then run biodiverse. The DYLD_LIBRARY_PATH is something you an add to your .zshrc or .bashrc file to avoid retyping it. `sh  export DYLD_LIBRARY_PATH=${HOME}/usr:${DYLD_LIBRARY_PATH}  ~/perl5/perlbrew/bin/perlbrew switch perl-5.36.1  perl ~/biodiverse/bin/BiodiverseGUI.pl`
+
+## Linux
+
+### Binary
+
+**These instructions apply to version 1.99 and later**
+
+#### Installation {#installation}
+
+- Decompress and untar the Biodiverse package file to your hard drive. The following assumes you have unzipped it so `$HOME/biodiverse` is the top level. If you use a different path then modify the commands as appropriate.
+- You might need to also install some of the dependencies, depending on your Linux installation. See the [InstallationLinuxSource](InstallationLinuxSource) page for details (the lines containing apt-get).
+
+```         
+  sudo apt-get update    # now get the apts   # for XML::Parser   sudo apt-get install libexpat1-dev   #  For online docs   sudo apt-get install libssl-dev   #  Gtk:   sudo apt-get install libcairo2-dev libpango1.0-dev libgtk2.0-dev libgnomecanvas2-dev      #  GDAL:   #  we build our own gdal for the source code version,    #  but for the binary version the apt-get version seems to work.   #  next two commands from http://www.sarasafavi.com/installing-gdalogr-on-ubuntu.html   sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update   sudo apt-get install gdal-bin   sudo apt-get install libkml-dev libfreexl-dev libogdi3.2-dev 
+```
+
+#### Running it {#running-it}
+
+- Biodiverse can be run by double clicking on `BiodiverseGUI_linux`.
+- If you want to keep the command log visible after you close Biodiverse then run it from a terminal.
+  - In the terminal, type `$HOME/biodiverse/BiodiverseGUI_linux`.
+- If you want to avoid all the typing then edit your profile to add the biodiverse directory to your \$PATH environment variable.
+
+#### Troubleshooting and changes {#troubleshooting-and-changes}
+
+- Ensure that you have installed the latest `GTK+`, `Glade` and `GnomeCanvas` packages.
+
+- If you don't like the current window theme then you can change them using the Desktop Preferences (also via the `gnome-appearance-properties` tool). You can download and install more themes from http://art.gnome.org/themes/gtk2
+
+- Please report any other issues using the [project issue tracker](https://github.com/shawnlaffan/biodiverse/issues/)
+
+### Source code
+
+**These instructions apply to version 2.99_001 and later.**
+
+Note that they have been tested on Ubuntu 16. The package manager will differ for other Linux flavours, but the cpan command will be the same.
+
+These also assume you have [downloaded](https://github.com/shawnlaffan/biodiverse/wiki/Downloads) the Biodiverse source code to your home directory and renamed it from whatever it was, e.g. `biodiverse_4.99_source`, to `biodiverse`. If you have saved it somewhere else then you will need to adjust the following so any references to `$HOME/biodiverse/lib` use the appropriate directory.
+
+#### Installation
+
+- This will require some interaction when it downloads additional packages, depending on your CPAN settings.
+
+- **Do not use the system perl for this**. The operating system assumes specific versions of files are in the system perl. Perlbrew is recommended, and is used for Biodiverse development, and is assumed below. https://perlbrew.pl/
+
+- Once you have installed the non-system perl, you need to make sure it is the one you call in subsequent steps. You will probably need to give the full path name to the perl binary when used below, rather than just saying `perl`.
+
+``` bash
+  sudo apt-get update    # now get the apts   # for XML::Parser   sudo apt-get install libexpat1-dev   #  For online docs   sudo apt-get install libssl-dev   #  Gtk:   sudo apt install libcairo2-dev libpango1.0-dev libgtk2.0-dev libgnomecanvas2-dev   sudo apt install libcanberra-gtk-module   # GDAL deps:   sudo apt install sqlite3 libgdal-dev    ##  Skip this step if you already have cpanm installed   ##  Uncomment and use this next line if you are not using perlbrew   # wget -O - https://cpanmin.us | perl - App::cpanminus   ##  but if you are using perlbrew:   perlbrew install-cpanm    ## Now install (most of) the rest of the dependencies   ##  Assuming you have unpacked or git cloned the files to ~/biodiverse   cd ~/biodiverse   cpanm --installdeps .    #  These are needed for the GUI   #  Gtk2 has test failures that do not affect Biodiverse   #  so we skip its tests.   cpanm --notest Gtk2   cpanm Gnome2::Canvas   cpanm HTTP::Tiny   cpanm Browser::Start   cpanm IO::Socket::SSL    ## If you are using Biodiverse 3.1 or earlier   cpanm Task::Biodiverse::NoGUI   cpanm Task::Biodiverse    ## some libs to make Biodiverse go faster if present   ## but don't worry if they do not install cleanly, the system will work without them.   ## Panda::Lib does not install on Windows so is not in the dep list   ## cpanm Panda::Lib   cpanm Data::Recursive   ##  Biodiverse::Utils is not yet on cpan   cpanm https://github.com/shawnlaffan/biodiverse-utils/releases/download/v1.11/Biodiverse-Utils-1.11.tar.gz    
+```
+
+If you don't like the current window theme then there are various tools you can install to change it.
+
+#### Running it
+
+- To run Biodiverse, open a terminal window and change directory to the biodiverse/bin folder. If it is in your home folder and called `biodiverse` then type:
+
+``` bash
+cd ~/biodiverse/bin
+```
+
+- Once you have done this, type the following command to open Biodiverse.
+
+``` bash
+perl BiodiverseGUI.pl
+```
+
+- Alternately, you could give the full path to Biodiverse if you want to start in a particular directory (i.e. where all your files are).
+
+``` bash
+perl ~/biodiverse/bin/BiodiverseGUI.pl
+```
+
+- If you want your command prompt back after opening Biodiverse then run it as a background job. However, the log output will then be mixed with any other commands you type.
+
+``` bash
+perl BiodiverseGUI.pl &
+```
+
+- You can also add the `biodiverse/bin` folder to your PATH variable to save some typing. You might also need to edit the shebang line in BiodiverseGUI.pl to point to the correct perl executable.
+
+#### Troubleshooting {#troubleshooting}
+
+- Ubuntu 11 appears to need this before running the other installer commands: `sudo apt-get install libgnome2-canvas-perl`
+- Please report any issues using the [project issue tracker](https://github.com/shawnlaffan/biodiverse/issues/)
+
+### Source code on HPC systems
+
+**These instructions apply to version 2.99_001 and later.**
+
+These instructions assume you are not installing the GUI components. It is possible to run the GUI on HPC, and details can be added if needed.
+
+They are based on development on Centos 6.3, but have not been tested line by line when written. Please report any errors or suggestions.
+
+They also assume you are using a standard user account, and are accessing Biodiverse through the git repository.
+
+#### Installation
+
+**Part 1. Install a non-system perl**
+
+- Install PerlBrew, including its optional cpanm client.
+  - Instructions are at https://perlbrew.pl/
+  - **You should not use the system perl**. The operating system assumes specific versions of files are in the system perl.
+  - Perlbrew is recommended, and is used for Biodiverse development, and is assumed below. There are other other systems like plenv which will likely also work, but I have not tested them.
+  - Make sure you are using the non-system perl for all subsequent steps. This could involve adding a line to your .bashrc (or equivalent) file to ensure it is loaded each time you login. Perlbrew provides instructions on how to do this.
+
+**Part 2. Clone the Biodiverse repo**
+
+``` bash
+  #  update this if you wish to install to a different location or checkout a release tag   git clone https://github.com/shawnlaffan/biodiverse.git    #  the next section assumes you are in the biodiverse git directory   cd biodiverse 
+```
+
+**Part 3. Install the perl dependencies**
+
+``` bash
+   ##  if you are using perlbrew and forgot to install the cpanm client:   perlbrew install-cpanm    ## Alien::gdal is a big dependency.  It is listed in the cpanfile,    #  but it can be useful to install it first.   #  Note that, if you have GDAL version 3.0 or higher already    #  installed on your system then this will use that version    #  instead of building its own.   #  Note also that if you have loaded a system GDAL using ```module load```    #  or similar then you need to ensure it is loaded each time    #  you run Biodiverse or it will fail to start.   cpanm Alien::sqlite   cpanm Alien::proj   cpanm Alien::geos::af   cpanm Alien::gdal    #  Geo::GDAL::FFI does not yet declare this dependency   cpanm FFI::Platypus::Declare      ## Now install the rest of the dependencies   ## Note that new deps might be added as    ## part of the development process   cpanm --installdeps .     #  only if you are installing version 3.1 or earlier   cpanm Task::Biodiverse::NoGUI    ## some libs to make Biodiverse go faster   ## Panda::Lib does not install on Windows, so is not in the generic dep list   ## cpanm Panda::Lib   cpanm Data::Recursive   ##  Biodiverse::Utils is not yet on cpan   cpanm https://github.com/shawnlaffan/biodiverse-utils/releases/download/v1.09/Biodiverse-Utils-1.09.tar.gz    ##  if the above command fails with an error    #   regarding curl and libffi then use your   #   system package manager to install libffi   #   and then re-run the above command  
+```
+
+#### Testing it
+
+Follow these steps to check that everything is installed and Biodiverse will run.
+
+``` bash
+  #  Make sure you are in the top level of the biodiverse distribution   #  You should see directories bin, etc, lib, t, xt and so forth when you run ls.     export BD_NO_TEST_GUI=1  #  no need to test the GUI libs load   prove -l 
+```
+
+#### Running it
+
+- Run your scripts as you would any other perl script, e.g.
+
+``` bash
+perl ~/biodiverse/bin/run_randomisation.pl
+```
+
+#### Troubleshooting
+
+- If you are keeping up with the git development then you will occassionally need to install extra dependencies.\
+  If perl complains that you are missing a module then it can be installed using cpanm. For example if the missing module is called Blort::Bork, then you can run `cpanm Blort::Bork` at the command line to install it and its dependencies.
+- Please report any issues using the [project issue tracker](https://github.com/shawnlaffan/biodiverse/issues/)

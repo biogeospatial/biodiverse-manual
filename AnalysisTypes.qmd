@@ -1,4 +1,4 @@
-# Analysis types
+# 5. Analysis types
 
 ## Introduction
 

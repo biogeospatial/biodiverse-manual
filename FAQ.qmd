@@ -122,7 +122,7 @@ All of that said, it's up to the user to decide how they want to run their analy
 
 Length is the length of the node clicked on. Total length is the length from that node to the tip of the tree (and should probably be renamed).
 
-## What are total_length_gui and \_y in the cluster analyses? \##
+## What are total_length_gui and \_y in the cluster analyses? \#
 
 These are display parameters used by the system and can be ignored.
 

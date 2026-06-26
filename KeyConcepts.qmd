@@ -1,4 +1,4 @@
-# Key concepts
+# 2. Key concepts
 
 ## Overview {#overview}
 

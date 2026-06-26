@@ -15,3 +15,5 @@ ignore/
 ~$*.pptx
 **/*.quarto_ipynb
 /docs
+*.jpeg
+images/clipboard-3677536432.png
